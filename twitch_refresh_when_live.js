@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Refresh when streamer goes live
 // @namespace    https://github.com/Dragosarus/Userscripts/
-// @version      2025-04-16
+// @version      2025-06-04
 // @description  Also unmutes and refreshes on video player error.
 // @author       Dragosarus
 // @match        https://www.twitch.tv/*
@@ -36,7 +36,7 @@
 
     const SELECTORS = {
         // The "LIVE" label under the streamer's profile picture
-        "live": "ScChannelStatusTextIndicatorMask-sc-qtgrnb-1",
+        "live": ".ScChannelStatusTextIndicatorMask-sc-qtgrnb-1",
         // The "↗ Chat" button
         "chat": "p.ScTitleText-sc-d9mj2s-0:nth-child(2)",
         // The text when hovering over the volume button when muted
