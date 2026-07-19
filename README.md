@@ -1,4 +1,2 @@
-# Userscripts
-Userscripts for Tampermonkey etc.
-
-https://greasyfork.org/en/users/582968-dragosarus
+# userscript-youtube-reverse-playlist-autoplay-direction
+Rewrite of https://github.com/Dragosarus/Userscripts/blob/master/youtube_playlist_reverse.js
