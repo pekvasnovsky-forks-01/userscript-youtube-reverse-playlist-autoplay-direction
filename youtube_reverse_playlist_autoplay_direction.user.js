@@ -411,17 +411,19 @@
                 shuffle = undefined;
             }
 
-            if (!shuffle) { // wysiwyg
-                let shuffleLocal = $(shuffleContext + " " + selectors.shuffleButtonActive).parents("button[aria-pressed]");
-                if (!shuffleLocal.length) { // shuffle not activated or new UI has not been pushed to the user yet
-                    shuffleLocal = $(shuffleContext + " " + selectors.shuffleButtonInactive).parents("button[aria-pressed]");
-                    if (!shuffleLocal.length) { // new UI not pushed to user
-                        shuffleLocal = $(selectors.shuffleButtonLegacy).filter(":visible").parents("button[aria-pressed]");
-                    }
+            if (!shuffle) {
+                let shuffleLocal = document.querySelector(shuffleContext + " " + selectors.shuffleButtonActive)
+                    ?.closest("button[aria-pressed]");
+
+                if (!shuffleLocal) { // shuffle not activated
+                    shuffleLocal = document.querySelector(shuffleContext + " " + selectors.shuffleButtonInactive)
+                        ?.closest("button[aria-pressed]");
                 }
-                shuffle = shuffleLocal[0];
+
+                shuffle = shuffleLocal ?? undefined;
                 miniplayerFlag = miniplayerActive;
             }
+            
             try {videoPlayer.classList.contains("ad-showing");} // ensure it will work below
             catch (TypeError) { // video player undefined
             	return;
