@@ -347,9 +347,11 @@
         function withQuery(query, filterItemsOnlyReturnVisible = false, onSuccess = function(/** @type {any} */ r){}) {
             let res;
             if (!filterItemsOnlyReturnVisible) {
-                res = $(query);
+                res = document.querySelectorAll(query);
             } else {
-                res = $(query).filter(":visible");
+                res = Array.from(document.querySelectorAll(query)).filter(function (elem) {
+                    return /** @type {HTMLElement} */ (elem).offsetParent !== null;
+                });
             }
             if (res.length) { // >= 1 result
                 onSuccess(res);
