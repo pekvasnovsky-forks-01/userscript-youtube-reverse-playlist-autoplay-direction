@@ -64,12 +64,12 @@
             "player":                    ".html5-main-video",
             "miniplayerDiv":             "div.miniplayer",
             "playlistButtons":           ".ytd-watch-flexy #playlist #playlist-action-menu",
-            "playlistButtonsMiniplayer": "ytd-playlist-panel-renderer.ytd-miniplayer #playlist-action-menu",
+            "playlistButtonsMiniplayer": "ytd-miniplayer #playlist-action-menu",
             "playlistCurrentVideo":      "ytd-playlist-panel-video-renderer[selected]",
             "playlistVideos":            "#publisher-container span.index-message",
-            "playlistVideosMiniplayer":  "yt-formatted-string[id=owner-name] :nth-child(3)",
-            "shuffleButtonActive":       "path[d='M18.51,13.29l4.21,4.21l-4.21,4.21l-1.41-1.41l1.8-1.8c-2.95-0.03-5.73-1.32-7.66-3.55l1.51-1.31 c1.54,1.79,3.77,2.82,6.13,2.85l-1.79-1.79L18.51,13.29z M18.88,7.51l-1.78,1.78l1.41,1.41l4.21-4.21l-4.21-4.21l-1.41,1.41l1.8,1.8 c-3.72,0.04-7.12,2.07-8.9,5.34l-0.73,1.34C7.81,14.85,5.03,17,2,17v2c3.76,0,7.21-2.55,9.01-5.85l0.73-1.34 C13.17,9.19,15.9,7.55,18.88,7.51z M8.21,10.31l1.5-1.32C7.77,6.77,4.95,5,2,5v2C4.38,7,6.64,8.53,8.21,10.31z']",
-            "shuffleButtonInactive":     "path[d='M18.15,13.65l3.85,3.85l-3.85,3.85l-0.71-0.71L20.09,18H19c-2.84,0-5.53-1.23-7.39-3.38l0.76-0.65 C14.03,15.89,16.45,17,19,17h1.09l-2.65-2.65L18.15,13.65z M19,7h1.09l-2.65,2.65l0.71,0.71l3.85-3.85l-3.85-3.85l-0.71,0.71 L20.09,6H19c-3.58,0-6.86,1.95-8.57,5.09l-0.73,1.34C8.16,15.25,5.21,17,2,17v1c3.58,0,6.86-1.95,8.57-5.09l0.73-1.34 C12.84,8.75,15.79,7,19,7z M8.59,9.98l0.75-0.66C7.49,7.21,4.81,6,2,6v1C4.52,7,6.92,8.09,8.59,9.98z']",
+            "playlistVideosMiniplayer":  ".ytdMiniplayerInfoBarPlaylistIndex > span:nth-child(2)",
+            "shuffleButtonActive":       "path[d='M16.293 13.293a1 1 0 011.414 0L22.414 18l-4.707 4.707a1 1 0 01-1.414-1.413L18.586 19H17.21a7.001 7.001 0 01-5.824-3.117l-.186-.278 1.202-1.803.648.972A5.001 5.001 0 0017.21 17h1.375l-2.293-2.293a1 1 0 010-1.414Zm0-12a1 1 0 011.414 0L22.414 6l-4.707 4.707a1 1 0 01-1.414-1.414L18.586 7H17.21a5 5 0 00-4.16 2.227l-4.438 6.656A7 7 0 012.79 19H2a1 1 0 010-2h.79a5 5 0 004.16-2.226l4.437-6.656A7 7 0 0117.21 5h1.375l-2.293-2.292a1 1 0 010-1.415ZM3 10.001a2 2 0 110 4 2 2 0 010-4Zm-.21-5a7 7 0 015.823 3.117l.185.277-1.202 1.803-.647-.971A5 5 0 002.79 7H2a1 1 0 010-2h.79Z']",
+            "shuffleButtonInactive":     "path[d='M16.293 1.293a1 1 0 00-.001 1.415L18.585 5H17.21a7 7 0 00-5.823 3.118L6.95 14.774A5 5 0 012.79 17H2a1 1 0 000 2h.79a7 7 0 005.822-3.117l4.438-6.656A5 5 0 0117.21 7h1.376l-2.293 2.293a1 1 0 001.414 1.414L22.414 6l-4.707-4.707a1 1 0 00-1.414 0ZM2.789 5H2a1 1 0 000 2h.79a5 5 0 014.159 2.227l.647.97 1.202-1.802-.185-.277A7 7 0 002.789 5Zm13.504 8.293a1 1 0 00-.001 1.414L18.585 17H17.21a5 5 0 01-4.16-2.226l-.648-.972-1.202 1.803.186.278A7 7 0 0017.21 19h1.376l-2.293 2.294-.068.076a1 1 0 001.406 1.406l.076-.07L22.414 18l-4.707-4.707a1 1 0 00-1.414 0Z']",
             "shuffleButtonLegacy":       "path[d='M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z']",
             "timestamp":                 "span.ytd-thumbnail-overlay-time-status-renderer",
             "videoPlayer":               ".html5-video-player"
@@ -92,6 +92,9 @@
          */
         let playPrevious;
         let redirectFlag = false;
+        /**
+         * @type {Element | undefined}
+         */
         let shuffle;
         let miniplayerActive = false;
         let miniplayerFlag = false; // keep track of switches between miniplayer and normal mode
@@ -371,8 +374,12 @@
             let context = miniplayerActive ? selectors.miniplayerDiv : selectors.content;
             let buttonSelector = context + " " + selectors.buttonLocation + " #pytplir_div";
             let noButton = !document.querySelector(buttonSelector);
-            let playlistHeaderQuery = miniplayerActive ? $(selectors.playlistVideosMiniplayer).parent() : $(selectors.playlistVideos).parent();
-            let playlistVisible = playlistHeaderQuery.length && playlistHeaderQuery.is(":visible");
+
+            let playlistHeaderQuery = miniplayerActive
+                ? document.querySelector(selectors.playlistVideosMiniplayer)?.parentElement
+                : document.querySelector(selectors.playlistVideos)?.parentElement;
+
+            let playlistVisible = !!playlistHeaderQuery && playlistHeaderQuery.offsetParent !== null;
 
             // exit early when not watching a playlist
             if (!playlistVisible) {return;} // button not loaded
@@ -400,15 +407,19 @@
                 shuffleContext = selectors.playlistButtons;
             }
 
-            if (!shuffle || (miniplayerActive != miniplayerFlag)) { // wysiwyg
-                shuffle = $(shuffleContext + " " + selectors.shuffleButtonActive).parents("button[aria-pressed]");
-                if (!shuffle.length) { // shuffle not activated or new UI has not been pushed to the user yet
-                    shuffle = $(shuffleContext + " " + selectors.shuffleButtonInactive).parents("button[aria-pressed]");
-                    if (!shuffle.length) { // new UI not pushed to user
-                        shuffle = $(selectors.shuffleButtonLegacy).filter(":visible").parents("button[aria-pressed]");
+            if (miniplayerActive != miniplayerFlag) {
+                shuffle = undefined;
+            }
+
+            if (!shuffle) { // wysiwyg
+                let shuffleLocal = $(shuffleContext + " " + selectors.shuffleButtonActive).parents("button[aria-pressed]");
+                if (!shuffleLocal.length) { // shuffle not activated or new UI has not been pushed to the user yet
+                    shuffleLocal = $(shuffleContext + " " + selectors.shuffleButtonInactive).parents("button[aria-pressed]");
+                    if (!shuffleLocal.length) { // new UI not pushed to user
+                        shuffleLocal = $(selectors.shuffleButtonLegacy).filter(":visible").parents("button[aria-pressed]");
                     }
                 }
-                shuffle = shuffle[0];
+                shuffle = shuffleLocal[0];
                 miniplayerFlag = miniplayerActive;
             }
             try {videoPlayer.classList.contains("ad-showing");} // ensure it will work below
@@ -416,9 +427,12 @@
             	return;
             }
 
+            /**
+             * @type {boolean}
+             */
             let shuffleEnabled;
             try {
-                shuffleEnabled = strToBool(shuffle.attributes["aria-pressed"].nodeValue);
+                shuffleEnabled = !!shuffle && strToBool(shuffle.getAttribute("aria-pressed"));
             } catch (TypeError) { // e.g. when using Queues
                 shuffleEnabled = false;
             }
@@ -514,10 +528,10 @@
         }
 
         /**
-         * @param {string} str
+         * @param {string | null} str
          */
         function strToBool(str) {
-            return str.toLowerCase() == "true";
+            return !!str && str.toLowerCase() == "true";
         }
 
         /**
