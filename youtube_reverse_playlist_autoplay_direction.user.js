@@ -428,7 +428,8 @@
                 player.pause();
                 player.currentTime -= 2;
 
-                if (getVidNum()[0] !== "1") {
+                const vidNum = getVidNum();
+                if (vidNum && vidNum[0] !== "1") {
                     redirectFlag = true;
                     redirect();
                     setTimeout(function() {redirectFlag = false;}, 1000);
@@ -436,20 +437,28 @@
             }
         }
 
-        function getVidNum() { // returns string array [current, total], e.g "32 / 152" => ["32", "152"]
-            let vidNum;
-            if (ytdApp.hasAttribute("miniplayer-active") || ytdApp.hasAttribute("miniplayer-active_")) {
-                vidNum = $(selectors.playlistVideosMiniplayer);
-            } else {
-                vidNum = $(selectors.playlistVideos);
-            }
-            // the desired element is hidden; to distinguish from
-            // other hidden elements, check parent's visibility
-            vidNum = vidNum.filter(function(){
-                return $(this).parent().is(":visible");
-            })[0].innerText;
+        function getVidNum() {
+            /**
+             * @type {NodeListOf<HTMLElement>}
+             */
+            let elements;
 
-            return vidNum.split(" / ");
+            if (ytdApp.hasAttribute("miniplayer-active") || ytdApp.hasAttribute("miniplayer-active_")) {
+                elements = document.querySelectorAll(selectors.playlistVideosMiniplayer);
+            } else {
+                elements = document.querySelectorAll(selectors.playlistVideos);
+            }
+
+            // the desired element is hidden; filter out those which are not in visible parent
+            const visibleElement = Array.from(elements).find(function (elem) {
+                return elem.parentElement && elem.parentElement.offsetParent !== null;
+            });
+
+            if (!visibleElement) {
+                return null;
+            }
+
+            return visibleElement.innerText.split(" / ");
         }
 
         function redirect() {
@@ -551,4 +560,3 @@
         }
     });
 })();
-/*eslint-env jquery*/ // stop eslint from showing "'$' is not defined" warnings
