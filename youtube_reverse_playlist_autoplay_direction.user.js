@@ -285,7 +285,7 @@
 
         function addButton() { // Add button(s)
             debugLog("addButton start")
-            withQuery(selectors.buttonLocation, "*", function(res) {
+            withQuery(selectors.buttonLocation, false, function(res) {
                 res.each(function() {
                     if (!$(this).find("#pytplir_div").length) {
                         const clone = /** @type {HTMLDivElement} */ (btn_div.cloneNode(true));
@@ -332,7 +332,7 @@
             addButton();
             debugLog("playerListenersAdded = " + playerListenersAdded);
             if (!playerListenersAdded) {
-                withQuery(selectors.player, ":visible", function(res) {
+                withQuery(selectors.player, true, function(res) {
                     player = res[0];
                     player.addEventListener("timeupdate", checkTime);
                     player.addEventListener("play", addButton); // ensure button is added
@@ -344,18 +344,18 @@
         /**
          * @param {string} query
          */
-        function withQuery(query, filter="*", onSuccess = function(/** @type {any} */ r){}) {
+        function withQuery(query, filterItemsOnlyReturnVisible = false, onSuccess = function(/** @type {any} */ r){}) {
             let res;
-            if (filter == "*") {
+            if (!filterItemsOnlyReturnVisible) {
                 res = $(query);
             } else {
-                res = $(query).filter(filter);
+                res = $(query).filter(":visible");
             }
             if (res.length) { // >= 1 result
                 onSuccess(res);
                 return res;
             } else { // not loaded yet => retry
-                setTimeout(function(){withQuery(query, filter, onSuccess)});
+                setTimeout(function(){withQuery(query, filterItemsOnlyReturnVisible, onSuccess)});
             }
         }
 
