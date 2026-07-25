@@ -1,13 +1,12 @@
 // ==UserScript==
-// @name         Play Youtube playlist in reverse order
-// @namespace    https://github.com/Dragosarus/Userscripts/
-// @version      7.9
-// @description  Adds button for loading the previous video in a YT playlist
-// @author       Dragosarus
+// @name         Autoplay Youtube playlist in reverse order
+// @namespace    https://github.com/pekvasnovsky/userscript-youtube-reverse-playlist-autoplay-direction/
+// @version      1.0
+// @description  Adds buttons for loading the previous video in a YT playlist. Rewrite of https://github.com/Dragosarus/Userscripts/blob/master/youtube_playlist_reverse.js
+// @author       pekvasnovsky
 // @match        http://www.youtube.com/*
 // @match        https://www.youtube.com/*
 // @grant        none
-// @require      http://code.jquery.com/jquery-latest.js
 // @noframes
 // ==/UserScript==
 
