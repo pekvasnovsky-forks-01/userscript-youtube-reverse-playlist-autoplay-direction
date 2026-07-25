@@ -2,7 +2,7 @@
 // @name         Autoplay Youtube playlist in reverse order
 // @namespace    https://github.com/pekvasnovsky/userscript-youtube-reverse-playlist-autoplay-direction/
 // @version      1.0
-// @description  Adds buttons for loading the previous video in a YT playlist. Rewrite of https://github.com/Dragosarus/Userscripts/blob/master/youtube_playlist_reverse.js
+// @description  Adds buttons for loading the previous video in a YT playlist. Adjustment of https://github.com/Dragosarus/Userscripts/blob/master/youtube_playlist_reverse.js
 // @author       pekvasnovsky
 // @match        http://www.youtube.com/*
 // @match        https://www.youtube.com/*
@@ -281,18 +281,18 @@
 
         function updateButtonState() {
             if (playPrevious) { // play previous video
-                $("polygon[id=pytplir_arrow_up]").each(function() {
-                    this.setAttribute("style", "fill:" + activeColor);
+                document.querySelectorAll("polygon[id=pytplir_arrow_up]").forEach(function (polygon) {
+                    polygon.setAttribute("style", "fill:" + activeColor);
                 });
-                $("polygon[id=pytplir_arrow_down]").each(function() {
-                    this.setAttribute("style", "fill:" + inactiveColor);
+                document.querySelectorAll("polygon[id=pytplir_arrow_down]").forEach(function (polygon) {
+                    polygon.setAttribute("style", "fill:" + inactiveColor);
                 });
             } else { // play next video
-                $("polygon[id=pytplir_arrow_up]").each(function() {
-                    this.setAttribute("style", "fill:" + inactiveColor);
+                document.querySelectorAll("polygon[id=pytplir_arrow_up]").forEach(function (polygon) {
+                    polygon.setAttribute("style", "fill:" + inactiveColor);
                 });
-                $("polygon[id=pytplir_arrow_down]").each(function() {
-                    this.setAttribute("style", "fill:" + activeColor);
+                document.querySelectorAll("polygon[id=pytplir_arrow_down]").forEach(function (polygon) {
+                    polygon.setAttribute("style", "fill:" + activeColor);
                 });
             }
             miniplayerActive = isMiniplayerActive();
@@ -343,7 +343,7 @@
             let miniplayerActive = isMiniplayerActive();
             let context = miniplayerActive ? selectors.miniplayerDiv : selectors.content;
             let buttonSelector = context + " " + selectors.buttonLocation + " #pytplir_div";
-            let noButton = !$(buttonSelector).length;
+            let noButton = !document.querySelector(buttonSelector);
             let playlistHeaderQuery = miniplayerActive ? $(selectors.playlistVideosMiniplayer).parent() : $(selectors.playlistVideos).parent();
             let playlistVisible = playlistHeaderQuery.length && playlistHeaderQuery.is(":visible");
 
