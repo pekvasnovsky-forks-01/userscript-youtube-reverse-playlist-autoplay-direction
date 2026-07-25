@@ -452,30 +452,49 @@
             }
         }
 
-        function getPreviousURL(){ // returns <a> element
+        function getPreviousURL() { // returns <a> element
             let elem;
-            if (ytdApp.hasAttribute("miniplayer-active") || ytdApp.hasAttribute("miniplayer-active_")) { // avoid being forced out of miniplayer mode on video load
-                elem = $(selectors.miniplayerDiv).find(selectors.playlistCurrentVideo).prev();
+
+            if (ytdApp.hasAttribute("miniplayer-active") || ytdApp.hasAttribute("miniplayer-active_")) {
+                elem = document.querySelector(selectors.miniplayerDiv)
+                    ?.querySelector(selectors.playlistCurrentVideo)
+                    ?.previousElementSibling;
             } else {
-                elem = $(selectors.content).find(selectors.playlistCurrentVideo).prev();
+                elem = document.querySelector(selectors.content)
+                    ?.querySelector(selectors.playlistCurrentVideo)
+                    ?.previousElementSibling;
             }
 
             let ts;
-            if (skipUnplayable) {
-                ts = $(elem).find(selectors.timestamp);
-                if (ts.length) {ts = ts[0].innerText; }
-            }
-            
-            while (!elem.find("#unplayableText").prop("hidden") ||
-                   (skipUnplayable && typeof(ts) == "string" && !ts.includes(":"))) { // while an unplayable (e.g. private) video is selected
-                elem = elem.prev();
-                if (!elem.length) return null; // first video in playlist
+
+            /**
+             * @param {Element | null | undefined} element
+             */
+            function getTimestamp(element) {
                 if (skipUnplayable) {
-                    ts = $(elem).find(selectors.timestamp);
-                    if (ts.length) { ts = ts[0].innerText; }
+                    /**
+                     * @type {HTMLElement | null | undefined}
+                     */
+                    const timestamp = element?.querySelector(selectors.timestamp);
+                    return timestamp ? timestamp.innerText : undefined;
                 }
             }
-            return elem.children()[0];
+
+            ts = getTimestamp(elem);
+
+            while (
+                elem &&
+                ((/** @type {HTMLElement | null | undefined} */ (elem.querySelector("#unplayableText")))?.hidden === false ||
+                    (skipUnplayable && typeof ts === "string" && !ts.includes(":")))
+            ) {
+                elem = elem.previousElementSibling;
+
+                if (!elem) return null; // first video in playlist
+
+                ts = getTimestamp(elem);
+            }
+
+            return /** @type {HTMLAnchorElement | null} */ (elem?.children[0] ?? null);
         }
 
         /**
