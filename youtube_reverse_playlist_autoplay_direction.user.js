@@ -77,6 +77,15 @@
 
         const ytdApp = /** @type {Element} */ (document.querySelector("ytd-app"));
 
+        /**
+         * @type {{ 
+         *      addEventListener: (arg0: string, arg1: { (): void; (): void; }) => void; 
+         *      duration: number; 
+         *      currentTime: number; 
+         *      hasAttribute: (arg0: string) => any; 
+         *      pause: () => void; 
+         * }}
+         */
         let player;
         /**
          * @type {boolean | string}
@@ -248,8 +257,16 @@
          */
         function initObserver(observer, options) {
             try {
-                observer.observe($(selectors.playlistVideos)[0], options);
-                observer.observe($(selectors.playlistVideosMiniplayer)[0], options);
+                const playlistVideos = document.querySelector(selectors.playlistVideos);
+
+                if (playlistVideos) {
+                    observer.observe(playlistVideos, options);
+                }
+
+                const playlistVideosMiniplayer = document.querySelector(selectors.playlistVideosMiniplayer);
+                if (playlistVideosMiniplayer) {
+                    observer.observe(playlistVideosMiniplayer, options);
+                }
             } catch (e) {
                 setTimeout(function(){initObserver(observer)}, 100);
             }
@@ -358,7 +375,10 @@
                      ", button == " + !noButton);
 
             let timeLeft = player.duration - player.currentTime;
-            let videoPlayer = $(selectors.videoPlayer)[0];
+            let videoPlayer = document.querySelector(selectors.videoPlayer);
+            if (!videoPlayer) {
+                throw new Error("Video player not found");
+            }
 
             let redirectTime;
             let shuffleContext;
