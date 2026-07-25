@@ -331,7 +331,10 @@
             }
         }
 
-        function withQuery(query, filter="*", onSuccess = function(r){}) {
+        /**
+         * @param {string} query
+         */
+        function withQuery(query, filter="*", onSuccess = function(/** @type {any} */ r){}) {
             let res;
             if (filter == "*") {
                 res = $(query);
@@ -488,7 +491,7 @@
         function debugLog(...args) {
             if (debug) {
                 args.unshift("pytplir:");
-                console.log.apply(this, args);
+                console.log.apply(console, args);
             }
         }
 
