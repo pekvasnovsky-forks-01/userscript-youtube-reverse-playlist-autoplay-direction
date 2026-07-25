@@ -286,12 +286,12 @@
         function addButton() { // Add button(s)
             debugLog("addButton start")
             withQuery(selectors.buttonLocation, false, function(res) {
-                res.each(function() {
-                    if (!$(this).find("#pytplir_div").length) {
+                res.forEach(function(/** @type {Element} */ element) {
+                    if (!element.querySelector("#pytplir_div")) {
                         const clone = /** @type {HTMLDivElement} */ (btn_div.cloneNode(true));
-                        // @ts-ignore
-                        attachHandlers(clone.querySelector(':scope > svg'));
-                        this.appendChild(clone);
+                        
+                        attachHandlers(/** @type {SVGSVGElement} */ (clone.querySelector(':scope > svg')));
+                        element.appendChild(clone);
 
                         updateButtonState();
                         debugLog("button added");
