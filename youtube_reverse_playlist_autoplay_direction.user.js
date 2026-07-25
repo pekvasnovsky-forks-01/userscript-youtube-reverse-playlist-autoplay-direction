@@ -7,6 +7,7 @@
 // @match        http://www.youtube.com/*
 // @match        https://www.youtube.com/*
 // @grant        none
+// @require      http://code.jquery.com/jquery-latest.js
 // @noframes
 // ==/UserScript==
 
@@ -20,9 +21,27 @@
  *    - If the button is displayed but does not work properly/consistently, increase the value of redirectWhenTimeLeft.
 */
 
+// @ts-check
+
 (function() {
     'use strict';
-    $(document).ready(function() {
+
+    // https://stackoverflow.com/a/7053197
+    /**
+     * @param {{ (): void; (this: Document, ev: Event): any; }} callback
+     */
+    function ready(callback) {
+        // in case the document is already rendered
+        if (document.readyState!='loading') callback();
+        // modern browsers
+        else if (document.addEventListener) document.addEventListener('DOMContentLoaded', callback);
+        // IE <= 8
+        // else document.attachEvent('onreadystatechange', function() {
+        //     if (document.readyState=='complete') callback();
+        // });
+    }
+
+    ready(function() {
         // Determines when to load the next video.
         // Increase these if the redirect does not work as intended (i.e. fails to override Youtube's redirect),
         // Decreasing these will let you see more of the video before it redirects, but the redirect might stop working (consistently)
@@ -56,9 +75,12 @@
             "videoPlayer":               ".html5-video-player"
         }
 
-        const ytdApp = $("ytd-app")[0];
+        const ytdApp = /** @type {Element} */ (document.querySelector("ytd-app"));
 
         let player;
+        /**
+         * @type {boolean | string}
+         */
         let playPrevious;
         let redirectFlag = false;
         let shuffle;
@@ -150,19 +172,48 @@
         appendChildren(tt_svg, [tt_rect, tt_text, tt_svg_fadein, tt_svg_fadeout]);
         tt_div.appendChild(tt_svg);
         appendChildren(btn_div, [btn_svg, tt_div]);
-        $(btn_svg).on("click", onButtonClick);
-        $(btn_svg).on("click", function(){$(this).parent().find("#pytplir_bg_circle_anim")[0].beginElement();});
-        $(btn_svg).on("mouseenter", function(){$(this).parent().find("#pytplir_tt_fadein")[0].beginElement();});
-        $(btn_svg).on("mouseleave", function(){$(this).parent().find("#pytplir_tt_fadeout")[0].beginElement();});
 
         init();
 
+        /**
+         * @param {SVGSVGElement} cloned_btn_svg
+         */
+        function attachHandlers(cloned_btn_svg) {
+            cloned_btn_svg.addEventListener("click", onButtonClick);
+            cloned_btn_svg.addEventListener("click", (e) => {
+                // @ts-ignore
+                e.currentTarget.parentElement
+                    .querySelector("#pytplir_bg_circle_anim")
+                    .beginElement();
+            });
+            cloned_btn_svg.addEventListener("mouseenter", (e) => {
+                // @ts-ignore
+                e.currentTarget.parentElement
+                    .querySelector("#pytplir_tt_fadein")
+                    .beginElement();
+            });
+            cloned_btn_svg.addEventListener("mouseleave", (e) => {
+                // @ts-ignore
+                e.currentTarget.parentElement
+                    .querySelector("#pytplir_tt_fadeout")
+                    .beginElement();
+            });
+        }
+
+        /**
+         * @param {Element} node
+         * @param {string[][]} attributeValuePairs
+         */
         function setAttributes(node, attributeValuePairs) { // [["id", "example"], ["width","20"], ...]
             for (let attVal of attributeValuePairs){
                 node.setAttribute(attVal[0], attVal[1]);
             }
         }
 
+        /**
+         * @param {Element} node
+         * @param {(Element)[]} childList
+         */
         function appendChildren(node, childList) {
             for (let child of childList) {
                 node.appendChild(child);
@@ -171,6 +222,10 @@
 
         function init() {
             // the button needs to be re-added whenever the playlist is updated (e.g when a video is loaded or removed)
+            /**
+             * @param {any} mutationList
+             * @param {any} observer
+             */
             function observerCallback(mutationList, observer) {
                 debugLog("Observer triggered!")
                 start();
@@ -187,6 +242,10 @@
             start();
         }
 
+        /**
+         * @param {MutationObserver} observer
+         * @param {{ subtree: boolean; childList: boolean; characterData: boolean; } | undefined} [options]
+         */
         function initObserver(observer, options) {
             try {
                 observer.observe($(selectors.playlistVideos)[0], options);
@@ -207,7 +266,11 @@
             withQuery(selectors.buttonLocation, "*", function(res) {
                 res.each(function() {
                     if (!$(this).find("#pytplir_div").length) {
-                        this.appendChild($(btn_div).clone(true)[0]);
+                        const clone = /** @type {HTMLDivElement} */ (btn_div.cloneNode(true));
+                        // @ts-ignore
+                        attachHandlers(clone.querySelector(':scope > svg'));
+                        this.appendChild(clone);
+
                         updateButtonState();
                         debugLog("button added");
                     }
@@ -392,10 +455,16 @@
             return elem.children()[0];
         }
 
+        /**
+         * @param {string} str
+         */
         function strToBool(str) {
             return str.toLowerCase() == "true";
         }
 
+        /**
+         * @param {string[]} args
+         */
         function debugLog(...args) {
             if (debug) {
                 args.unshift("pytplir:");
@@ -404,10 +473,17 @@
         }
 
         // adapted from https://www.w3schools.com/js/js_cookies.asp
+        /**
+         * @param {string} cname
+         * @param {string | boolean} cvalue
+         */
         function setCookie(cname, cvalue) {
             document.cookie = cname + "=" + cvalue + ";sameSite=lax;path=www.youtube.com/watch";
         }
 
+        /**
+         * @param {string} cname
+         */
         function getCookie(cname) {
             let name = cname + "=";
             let decodedCookie = decodeURIComponent(document.cookie);
