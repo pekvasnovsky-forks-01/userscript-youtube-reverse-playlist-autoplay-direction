@@ -88,7 +88,7 @@
          */
         let player;
         /**
-         * @type {boolean | string}
+         * @type {boolean}
          */
         let playPrevious;
         let redirectFlag = false;
@@ -242,10 +242,12 @@
             const playlistObserver = new MutationObserver(observerCallback);
             const observerOptions = {subtree:true, childList:true, characterData:true};
             initObserver(playlistObserver, observerOptions);
-            playPrevious = getCookie("pytplir_playPrevious");
-            if (playPrevious === "") { // cookie has not been set yet
+            const playPreviousCookie = getCookie("pytplir_playPrevious");
+            if (playPreviousCookie === "") { // cookie has not been set yet
                 playPrevious = false; // inital state
                 setCookie("pytplir_playPrevious", playPrevious);
+            } else {
+                playPrevious = playPreviousCookie;
             }
 
             start();
@@ -312,10 +314,15 @@
                     polygon.setAttribute("style", "fill:" + activeColor);
                 });
             }
+
             miniplayerActive = isMiniplayerActive();
             let ctx = miniplayerActive ? selectors.miniplayerDiv : selectors.content;
-            $(ctx + " #pytplir_btn")[0].setAttribute("activated", playPrevious);
-            debugLog($(ctx + " #pytplir_btn"));
+
+            const button = document.querySelector(ctx + " #pytplir_btn");
+            if (button) {
+                button.setAttribute("activated", String(playPrevious));
+                debugLog(button);
+            }
         }
 
         function start() { // Add button(s) and event listeners
@@ -505,7 +512,7 @@
         }
 
         /**
-         * @param {string[]} args
+         * @param {any[]} args
          */
         function debugLog(...args) {
             if (debug) {
