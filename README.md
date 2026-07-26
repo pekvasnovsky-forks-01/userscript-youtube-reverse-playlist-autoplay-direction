@@ -9,3 +9,5 @@ For development using violentmonkey and firefox on linux:
 2. Navigate in browser to http://localhost:3333/youtube_reverse_playlist_autoplay_direction.user.js (it should load in violentmonkey)
 3. Set track external edits as specified in https://violentmonkey.github.io/posts/how-to-edit-scripts-with-your-favorite-editor/ - changes made in vscodium should be automatically reloaded and if you enable "Reload tab" it will also reload the browser tab automatically
 
+
+More userscripts: https://greasyfork.org/en/users/1628021-peter-kvasnovsky
