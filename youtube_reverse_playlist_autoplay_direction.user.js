@@ -128,6 +128,8 @@
         const btn_div = document.createElement("div");
         const bg_circle = document.createElementNS(svgNS, "circle");
         const bg_circle_anim = document.createElementNS(svgNS, "animate");
+        const bg_circle_fadein_anim = document.createElementNS(svgNS, "animate");
+        const bg_circle_fadeout_anim = document.createElementNS(svgNS, "animate");
         const arrow_up = document.createElementNS(svgNS, "polygon");
         const arrow_down = document.createElementNS(svgNS, "polygon");
         const btn_svg = document.createElementNS(svgNS, "svg");
@@ -139,12 +141,32 @@
         const tt_div = document.createElement("div");
 
         setAttributes(bg_circle_anim, [["attributeName", "fill-opacity"],
-                                       ["values", "0;0.1;0.2;0.1;0.0"],
+                                       ["by", "0.2"],
+                                       ["values", "0;0.5;0"],
                                        ["dur", "0.3s"],
+                                       ["additive", "sum"],
                                        ["restart", "always"],
                                        ["repeatCount", "1"],
                                        ["begin", "indefinite"],
                                        ["id", "pytplir_bg_circle_anim"]]);
+        setAttributes(bg_circle_fadein_anim, [["attributeType", "CSS"],
+                                              ["attributeName", "fill-opacity"],
+                                              ["values", "0;0.3"],
+                                              ["dur", "0.1s"],
+                                              ["restart", "always"],
+                                              ["repeatCount", "1"],
+                                              ["begin", "indefinite"],
+                                              ["id", "pytplir_bg_circle_fadein_anim"],
+                                              ["fill", "freeze"]]);
+        setAttributes(bg_circle_fadeout_anim, [["attributeType", "CSS"],
+                                               ["attributeName", "fill-opacity"],
+                                               ["values", "0.3;0"],
+                                               ["dur", "0.1s"],
+                                               ["restart", "always"],
+                                               ["repeatCount", "1"],
+                                               ["begin", "indefinite"],
+                                               ["id", "pytplir_bg_circle_fadeout_anim"],
+                                               ["fill", "freeze"]]);
         setAttributes(bg_circle, [["cx", "20"],
                                   ["cy", "20"],
                                   ["r", "20"],
@@ -200,9 +222,11 @@
                                ["style", "padding-left: 10px; fill:" + ttBGColor + "; " + tt_svg_offset],
                                ["id", "pytplir_tt"]]);
         setAttributes(tt_div, [["style", "position:relative; width:0; height:0;"]]);
-        setAttributes(btn_div, [["id", "pytplir_div"]]);
+        setAttributes(btn_div, [["id", "pytplir_div"],
+                                ["style", "display: flex;"],
+                                ["style", "flex-direction: column;"]]);
         tt_text.textContent = "Autoplay order";
-        bg_circle.appendChild(bg_circle_anim);
+        appendChildren(bg_circle, [bg_circle_anim, bg_circle_fadein_anim, bg_circle_fadeout_anim]);
         appendChildren(btn_svg, [bg_circle, arrow_up, arrow_down]);
         appendChildren(tt_svg, [tt_rect, tt_text, tt_svg_fadein, tt_svg_fadeout]);
         tt_div.appendChild(tt_svg);
@@ -228,7 +252,7 @@
                     .beginElement();
                 // @ts-ignore
                 e.currentTarget.parentElement
-                    .querySelector("#pytplir_bg_circle_anim")
+                    .querySelector("#pytplir_bg_circle_fadein_anim")
                     .beginElement();
             });
             cloned_btn_svg.addEventListener("mouseleave", (e) => {
@@ -238,7 +262,7 @@
                     .beginElement();
                 // @ts-ignore
                 e.currentTarget.parentElement
-                    .querySelector("#pytplir_bg_circle_anim")
+                    .querySelector("#pytplir_bg_circle_fadeout_anim")
                     .beginElement();
             });
         }
