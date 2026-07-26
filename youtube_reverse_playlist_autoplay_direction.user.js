@@ -6,8 +6,9 @@
 // @author       pekvasnovsky
 // @match        http://www.youtube.com/*
 // @match        https://www.youtube.com/*
-// @grant        none
-// @require      http://code.jquery.com/jquery-latest.js
+// @grant GM_getValue
+// @grant GM_setValue
+// @grant GM_registerMenuCommand
 // @noframes
 // ==/UserScript==
 
@@ -25,6 +26,31 @@
 
 (function() {
     'use strict';
+
+
+    // @ts-ignore
+    let debug = GM_getValue("debug", false);
+
+    const MENU_ID = "debug-toggle";
+
+    function registerMenu() {
+        // @ts-ignore
+        GM_registerMenuCommand(
+            `Debug: ${debug ? "ON" : "OFF"}`,
+            () => {
+                debug = !debug;
+                // @ts-ignore
+                GM_setValue("debug", debug);
+
+                // Update the menu item in place
+                registerMenu();
+            },
+            { id: MENU_ID }
+        );
+    }
+
+    registerMenu();
+
 
     // https://stackoverflow.com/a/7053197
     /**
@@ -54,9 +80,6 @@
         const circleColor = "rgb(144,144,144)";
         const ttBGColor = "rgb(100,100,100)";
         const ttTextColor = "rgb(237,240,243)";
-
-        // Logs debug messages to the console.
-        const debug = false;
 
         const selectors = {
             "buttonLocation":            "div[id=playlist-action-menu] > .ytd-playlist-panel-renderer > div[id=top-level-buttons-computed]",
@@ -178,7 +201,7 @@
                                ["id", "pytplir_tt"]]);
         setAttributes(tt_div, [["style", "position:relative; width:0; height:0;"]]);
         setAttributes(btn_div, [["id", "pytplir_div"]]);
-        tt_text.innerHTML = "Autoplay order";
+        tt_text.textContent = "Autoplay order";
         bg_circle.appendChild(bg_circle_anim);
         appendChildren(btn_svg, [bg_circle, arrow_up, arrow_down]);
         appendChildren(tt_svg, [tt_rect, tt_text, tt_svg_fadein, tt_svg_fadeout]);
@@ -203,11 +226,19 @@
                 e.currentTarget.parentElement
                     .querySelector("#pytplir_tt_fadein")
                     .beginElement();
+                // @ts-ignore
+                e.currentTarget.parentElement
+                    .querySelector("#pytplir_bg_circle_anim")
+                    .beginElement();
             });
             cloned_btn_svg.addEventListener("mouseleave", (e) => {
                 // @ts-ignore
                 e.currentTarget.parentElement
                     .querySelector("#pytplir_tt_fadeout")
+                    .beginElement();
+                // @ts-ignore
+                e.currentTarget.parentElement
+                    .querySelector("#pytplir_bg_circle_anim")
                     .beginElement();
             });
         }
@@ -233,6 +264,7 @@
         }
 
         function init() {
+            debugLog("Calling init()");
             // the button needs to be re-added whenever the playlist is updated (e.g when a video is loaded or removed)
             /**
              * @param {any} mutationList
@@ -261,6 +293,7 @@
          * @param {{ subtree: boolean; childList: boolean; characterData: boolean; } | undefined} [options]
          */
         function initObserver(observer, options) {
+            debugLog("Calling initObserver()");
             try {
                 const playlistVideos = document.querySelector(selectors.playlistVideos);
 
@@ -543,7 +576,7 @@
          */
         function debugLog(...args) {
             if (debug) {
-                args.unshift("pytplir:");
+                args.unshift("yt-reverse-autoplay:");
                 console.log.apply(console, args);
             }
         }
